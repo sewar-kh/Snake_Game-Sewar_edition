@@ -61,11 +61,48 @@ def animate(canvas, snake_x, snake_y,snake_id):
 
         #  Move the snake in the current direction - move 20 pixels in the current direction
 
+        """ # milestone 2 - move only to the right 
+
         snake_x += SIZE
 
         # Move snake to new position
         canvas.moveto(snake_id, snake_x, snake_y)
-       
+        """
+        
+        #instead of using the previous to move only to the right - Move the snake in the current direction
+        direction, snake_x, snake_y = change_position(canvas, direction, snake_x, snake_y)
+
+        # Move snake to new position
+        canvas.moveto(snake_id, snake_x, snake_y)
+
+# function for milestone # 3 
+def change_position(canvas, direction, snake_x, snake_y):
+    
+    #  Handle key press and update direction
+
+    key = canvas.get_last_key_press()
+    if key == "ArrowLeft" and direction != "right":
+            direction = "left"
+    elif key == "ArrowRight" and direction != "left":
+        direction = "right"
+    elif key == "ArrowUp" and direction != "down":
+        direction = "up"
+    elif key == "ArrowDown" and direction != "up":
+        direction = "down"
+    
+    #  Move the snake in the current direction
+
+    if direction == 'right':
+        snake_x += SIZE
+    elif direction == 'left':
+        snake_x -= SIZE
+    elif direction == 'up':
+        snake_y -= SIZE
+    elif direction == 'down':
+        snake_y += SIZE
+    return direction, snake_x, snake_y
+
+        
 
    
    
