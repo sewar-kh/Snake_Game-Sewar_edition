@@ -75,6 +75,10 @@ def animate(canvas, snake_x, snake_y,snake_id):
         # Move snake to new position
         canvas.moveto(snake_id, snake_x, snake_y)
 
+        # milestone 4
+        if out_of_bounds(canvas, snake_id):
+            break
+
 # function for milestone # 3 
 def change_position(canvas, direction, snake_x, snake_y):
     
@@ -101,6 +105,19 @@ def change_position(canvas, direction, snake_x, snake_y):
     elif direction == 'down':
         snake_y += SIZE
     return direction, snake_x, snake_y
+
+# function for Milestone #4: Detecting Collisions (Game Over)
+def out_of_bounds(canvas,snake_id):
+    x = canvas.get_left_x(snake_id)
+    y = canvas.get_top_y(snake_id)
+
+    if x<0 or x >= CANVAS_WIDTH or y<0 or y >= CANVAS_HEIGHT :
+        
+        print("Game's over ! ")
+        return True
+
+    return False
+       
 
         
 
