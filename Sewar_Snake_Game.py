@@ -24,10 +24,10 @@ def main():
     #milestone 6 - growing snake  : 
     #change  snake_id to  snake_ids
     snake, snake_x, snake_y , snake_ids , food_x , food_y , food_id = intiate_game(canvas) 
-    """
+    
     # milestone 8 : adding scoring 
-    snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score, score_text_id = intiate_game(canvas)
-
+    snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id = intiate_game(canvas)
+    """
     """ #before milestone 5 : 
     animate(canvas, snake_x, snake_y,snake_id)
     
@@ -37,9 +37,13 @@ def main():
     # milestone 6 : 
     #change  snake_id to  snake_ids
     animate(canvas, snake, snake_x, snake_y,snake_ids, food_x, food_y, food_id)
-    """
+    
     # milestone 8 : adding scoring 
-    animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score, score_text_id)
+    animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id)
+    """
+     # milestone 9 :  Pass delay into animate()
+    snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id, delay = intiate_game(canvas)
+    animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id, delay)
 
 
 def draw_square(canvas,x,y,color):
@@ -64,6 +68,7 @@ def draw_food(canvas,x,y,color):
     return draw_square(canvas,x,y,color)
 
 def intiate_game(canvas):
+    delay = show_start_screen(canvas) # MILESTONE 9: show start screen and get delay
     
  # Create the snake starting at top-left corner
     snake_x = 0
@@ -99,10 +104,16 @@ def intiate_game(canvas):
     score_count = 0
     score_text_id = canvas.create_text(
         10, 10, anchor='nw', 
-        text="Score: 0", # another way : text=f"Score: {score}",
+        text="Score: 0", # another way : text=f"Score: {score_count}",
         font="Arial", font_size=14, color="black"
     )
-    return snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score, score_text_id
+    #return snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id
+    
+    # Milestone 9 - adding delay 
+    """ returning delay so we can use the delay selected from the start screen
+    inside the animate function."""
+    return snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id, delay
+
 
 # function for milestone # 2 and 3  
 
@@ -116,9 +127,12 @@ def animate(canvas, snake_x, snake_y, snake_id, food_x, food_y, food_id):
 #change  snake_id to  snake_ids
 
 def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id):  
-"""
+
 #milestone 8 - keeping scores :
 def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id,score_count, score_text_id):  
+"""
+#milestone 9 : Update animate() to accept delay
+def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score_count, score_text_id, delay):
 
     direction = 'right'  # Start moving to the right
     just_ate = False
@@ -389,9 +403,58 @@ def show_play_again_button(canvas):
     )
 
     return (button_x, button_y, button_width, button_height)
-    
 
+# milestone 9: "showing the start screen and having different levels
+def show_start_screen(canvas):
+    canvas.clear()
+    canvas.create_text(
+        (CANVAS_WIDTH // 2)/10,
+        CANVAS_HEIGHT // 4,
+        text="🐍 Sewar's Snake Game 🐍",
+        font="Arial",
+        font_size=28,
+        color="darkgreen"
+    )
 
+    canvas.create_text(
+        CANVAS_WIDTH // 4,
+        CANVAS_HEIGHT // 4 + 40,
+        text="Choose your difficulty level:",
+        font="Arial",
+        font_size=18,
+        color="black"
+    )
+
+    # Buttons for levels
+    levels = [("Easy", 0.2), ("Medium", 0.1), ("Hard", 0.05)]
+    buttons = []
+
+    for i, (label, delay) in enumerate(levels):
+        btn_width, btn_height = 100, 40
+        x1 = CANVAS_WIDTH // 2 - btn_width // 2
+        y1 = CANVAS_HEIGHT // 2 + i * (btn_height + 10)
+        x2 = x1 + btn_width
+        y2 = y1 + btn_height
+        canvas.create_rectangle(x1, y1, x2, y2, color="turquoise ")
+        canvas.create_text(
+            (x1 + x2) // 2 - btn_width/4  ,
+            (y1 + y2) // 2 - btn_height/5 ,
+            text=label,
+            font="Arial",
+            font_size=16,
+            color="black"
+        )
+        buttons.append((x1, y1, x2, y2, delay))
+
+    # Wait for click
+    while True:
+        click = canvas.get_last_click()
+        if click:
+            x, y = click
+            for x1, y1, x2, y2, delay in buttons:
+                if x1 <= x <= x2 and y1 <= y <= y2:
+                    return delay
+        time.sleep(0.1)
 
 if __name__ == '__main__':
     main()
