@@ -13,9 +13,19 @@ def main():
     #intiate Canvas 
     canvas = Canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     canvas.clear()
-    
+
+    """ #before milestone 5 : 
+
     snake_x, snake_y ,snake_id = intiate_game(canvas)
+    """
+    #milestone 5 : 
+    snake_x, snake_y , snake_id , food_x , food_y , food_id = intiate_game(canvas) 
+
+    """ #before milestone 5 : 
     animate(canvas, snake_x, snake_y,snake_id)
+    """
+    # milestone 5 : 
+    animate(canvas, snake_x, snake_y,snake_id, food_x, food_y, food_id)
     
 def draw_square(canvas,x,y,color):
     size = SIZE
@@ -50,10 +60,22 @@ def intiate_game(canvas):
     food_x = random.randint(0, (CANVAS_WIDTH - SIZE) // SIZE) * SIZE
     food_y = random.randint(0, (CANVAS_HEIGHT - SIZE) // SIZE) * SIZE
     food_id = draw_food(canvas,food_x,food_y,"red")
-    
-    return snake_x, snake_y , snake_id
 
+    """ #before milestone 5 :
+    return snake_x, snake_y , snake_id
+    """
+    #milestone 5 : 
+
+    return  snake_x, snake_y , snake_id , food_x , food_y , food_id
+
+# function for milestone # 2 and 3  
+
+""" #before milestone 5 : 
 def animate(canvas, snake_x, snake_y,snake_id):
+"""
+# milestone 5 : 
+def animate(canvas, snake_x, snake_y, snake_id, food_x, food_y, food_id):
+
     direction = 'right'  # Start moving to the right
 
     while True:  # animation loop
@@ -72,12 +94,15 @@ def animate(canvas, snake_x, snake_y,snake_id):
         #instead of using the previous to move only to the right - Move the snake in the current direction
         direction, snake_x, snake_y = change_position(canvas, direction, snake_x, snake_y)
 
-        # Move snake to new position
+        # milestone 3 : Move snake to new position
         canvas.moveto(snake_id, snake_x, snake_y)
 
         # milestone 4
         if out_of_bounds(canvas, snake_id):
             break
+        
+        # milestone 5 
+        food_x, food_y, food_id , just_ate = food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id)
 
 # function for milestone # 3 
 def change_position(canvas, direction, snake_x, snake_y):
@@ -108,6 +133,7 @@ def change_position(canvas, direction, snake_x, snake_y):
 
 # function for Milestone #4: Detecting Collisions (Game Over)
 def out_of_bounds(canvas,snake_id):
+
     x = canvas.get_left_x(snake_id)
     y = canvas.get_top_y(snake_id)
 
@@ -117,12 +143,26 @@ def out_of_bounds(canvas,snake_id):
         return True
 
     return False
-       
 
-        
+# Milestone #5: Moving the food and creating new food
+def food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id):
+    if snake_x == food_x and snake_y == food_y:
+        canvas.delete(food_id)
 
-   
-   
+        # Generate new food
+        food_x, food_y, food_id = new_food(canvas)
+        return food_x, food_y, food_id, True  # just_ate = True
+    else:
+        return food_x, food_y, food_id, False  # just_ate = False
+
+# functions for Milestone #5      
+def new_food(canvas):
+    food_x = random.randint(0, (CANVAS_WIDTH - SIZE) // SIZE) * SIZE
+    food_y = random.randint(0, (CANVAS_HEIGHT - SIZE) // SIZE) * SIZE
+    food_id = draw_food(canvas,food_x,food_y,"red") 
+
+    return food_x, food_y, food_id   
+
 
 if __name__ == '__main__':
     main()
