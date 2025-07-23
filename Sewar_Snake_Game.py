@@ -156,11 +156,18 @@ def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id)
         """
         # milestone 5 
         food_x, food_y, food_id , just_ate = food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id)
-        
+
+        """
         # milestone 6
         if out_of_bounds(canvas,snake_ids,food_id):
             break
-         
+        """
+        # milestone 7 : implementing the animated Game Over screen + Play Again button
+        if out_of_bounds(canvas, snake_ids[-1]):
+            show_animated_game_over(canvas)
+                       
+            break
+     
         
      
 # function for milestone # 3 
@@ -196,18 +203,34 @@ def out_of_bounds(canvas,snake_id):
 
     x = canvas.get_left_x(snake_id)
     y = canvas.get_top_y(snake_id)
-"""
+
 # milestone 6 :
 def out_of_bounds(canvas,snake_ids,food_id):
+    
     x = canvas.get_left_x(snake_ids[-1])
     y = canvas.get_top_y(snake_ids[-1])
 
     if x<0 or x >= CANVAS_WIDTH or y<0 or y >= CANVAS_HEIGHT :
-        
+
         print("Game's over ! ")
         return True
 
     return False
+    """
+
+# milestone 7 :
+def out_of_bounds(canvas, snake_head_id):
+    # No need for food_id here. so I removed it 
+    
+    x = canvas.get_left_x(snake_head_id)
+    y = canvas.get_top_y(snake_head_id)
+
+    # Check that x and y are not None:
+    if x is None or y is None:
+        print("Warning: invalid snake head position.")
+        return True  # treat as game over
+
+    return x<0 or x >= CANVAS_WIDTH or y<0 or y >= CANVAS_HEIGHT 
 
 # Milestone #5: Moving the food and creating new food
 def food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id):
@@ -227,6 +250,85 @@ def new_food(canvas):
     food_id = draw_food(canvas,food_x,food_y,"red") 
 
     return food_x, food_y, food_id   
+
+# functions for Milestone #7
+def show_animated_game_over(canvas):
+    size = 32
+    grow = True
+
+    # Draw the button once
+    button_bounds = show_play_again_button(canvas)
+    x1, y1, width, height = button_bounds
+    x2 = x1 + width
+    y2 = y1 + height
+
+    while True:
+        canvas.clear()  # Clear everything each frame
+        # Draw the pulsing "Game Over"
+        canvas.create_text(
+            CANVAS_WIDTH // 4,
+            CANVAS_HEIGHT // 2,
+            text="Game Over!",
+            font="Arial",
+            font_size=size,
+            color="red"
+        )
+        
+        
+        # Draw button again (since we cleared everything)
+        canvas.create_rectangle(x1, y1, x2, y2, color="lightgray")
+        canvas.create_text(
+            x1 + width // 5,
+            y1 + height // 3,
+            text="Play Again",
+            font="Arial",
+            font_size=16,
+            color="black"
+        )
+
+        size += 2 if grow else -2
+        if size >= 48 or size <= 28:
+            grow = not grow
+        
+
+    # Check if user clicked "Play Again"
+        click = canvas.get_last_click()
+        if click is not None:
+            click_x, click_y = click
+            if x1 <= click_x <= x2 and y1 <= click_y <= y2:
+                print("Restarting game...")
+                canvas.clear()
+                main()
+                return
+
+        time.sleep(0.1)
+
+def show_play_again_button(canvas):
+    button_width = 120
+    button_height = 40
+    #button_x = CANVAS_WIDTH // 2 - 60
+    button_x = CANVAS_WIDTH // 2 - button_width // 2
+    #button_y = CANVAS_HEIGHT // 2 + 50
+    button_y = CANVAS_HEIGHT*3//4
+
+    canvas.create_rectangle(
+        button_x, button_y,
+        button_x + button_width, button_y + button_height,
+        color="lightgray"
+    )
+    
+    canvas.create_text(
+        button_x + button_width // 5,
+        button_y + button_height // 3,
+        text="Play Again",
+        font="Arial",
+        font_size=16,
+        color="black"
+    )
+
+    return (button_x, button_y, button_width, button_height)
+    
+
 
 
 if __name__ == '__main__':
