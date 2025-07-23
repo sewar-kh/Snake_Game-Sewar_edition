@@ -69,6 +69,8 @@ def draw_food(canvas,x,y,color):
 
 def intiate_game(canvas):
     delay = show_start_screen(canvas) # MILESTONE 9: show start screen and get delay
+    canvas.clear()  # MILESTONE 9: # Clear the start screen after difficulty is selected and before drawing the snake and food
+
     
  # Create the snake starting at top-left corner
     snake_x = 0
