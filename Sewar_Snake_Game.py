@@ -20,20 +20,26 @@ def main():
     
     #milestone 5 : 
     snake_x, snake_y , snake_id , food_x , food_y , food_id = intiate_game(canvas) 
-    """
-    #milestone 6 - grwowing snake  : 
+    
+    #milestone 6 - growing snake  : 
     #change  snake_id to  snake_ids
     snake, snake_x, snake_y , snake_ids , food_x , food_y , food_id = intiate_game(canvas) 
-    
+    """
+    # milestone 8 : adding scoring 
+    snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score, score_text_id = intiate_game(canvas)
+
     """ #before milestone 5 : 
     animate(canvas, snake_x, snake_y,snake_id)
     
     # milestone 5 : 
     animate(canvas, snake_x, snake_y,snake_id, food_x, food_y, food_id)
-    """
+    
     # milestone 6 : 
     #change  snake_id to  snake_ids
     animate(canvas, snake, snake_x, snake_y,snake_ids, food_x, food_y, food_id)
+    """
+    # milestone 8 : adding scoring 
+    animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score, score_text_id)
 
 
 def draw_square(canvas,x,y,color):
@@ -82,11 +88,22 @@ def intiate_game(canvas):
     #milestone 5 : 
 
     return  snake_x, snake_y , snake_id , food_x , food_y , food_id
-    """
+    
     #milestone 6 : 
     #change  snake_id to  snake_ids
     return snake, snake_x, snake_y , snake_ids , food_x , food_y , food_id 
+    """
     
+    #milestone 8 - keeping scores : 
+    
+    score_count = 0
+    score_text_id = canvas.create_text(
+        10, 10, anchor='nw', 
+        text="Score: 0", # another way : text=f"Score: {score}",
+        font="Arial", font_size=14, color="black"
+    )
+    return snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id, score, score_text_id
+
 # function for milestone # 2 and 3  
 
 """ #before milestone 5 : 
@@ -94,11 +111,14 @@ def animate(canvas, snake_x, snake_y,snake_id):
 
 # milestone 5 : 
 def animate(canvas, snake_x, snake_y, snake_id, food_x, food_y, food_id):
-"""
+
 # milestone 6 : 
 #change  snake_id to  snake_ids
 
 def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id):  
+"""
+#milestone 8 - keeping scores :
+def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id,score_count, score_text_id):  
 
     direction = 'right'  # Start moving to the right
     just_ate = False
@@ -128,7 +148,6 @@ def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id)
         `moveto` function expects a single object ID (likely a string), but it is receiving a list when changing snake_id to 'snake_ids' on milestone 5, 
         which is a list of object IDs. One way to fix this : we can ensure that each ID in the `snake_ids` list is moved individually using the `moveto` function. I chose to use another method 
         """
-        
         # milestone 6 : Compute new head position
         new_head = (snake_x, snake_y)
         snake.append(new_head)
@@ -153,22 +172,39 @@ def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id)
         # milestone 4
         if out_of_bounds(canvas, snake_id):
             break
-        """
+        
         # milestone 5 
+        if out_of_bounds(canvas, snake_id): # : no change from milestone 4
+            break
         food_x, food_y, food_id , just_ate = food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id)
 
-        """
         # milestone 6
-        if out_of_bounds(canvas,snake_ids,food_id):
+        if out_of_bounds(canvas,snake_ids,food_id):  #adding food_id , change snake_id to snake_ids 
             break
-        """
+        # no change from milestone 5 
+        food_x, food_y, food_id , just_ate = food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id)
+
+        # milestone 7 : no change from milestone 5 
+        food_x, food_y, food_id , just_ate = food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id)
+
         # milestone 7 : implementing the animated Game Over screen + Play Again button
         if out_of_bounds(canvas, snake_ids[-1]):
             show_animated_game_over(canvas)
                        
             break
-     
+        """
+        # milestone 8 : adding score_count 
+        food_x, food_y, food_id , score_count, just_ate = food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id,score_count)
+
+        # milestone 8 : canvas.change_text &  adding score_count to Check for out of bounds
+        canvas.change_text(score_text_id, "Score: " + str(score_count))
         
+        # milestone 8 : adding score_count 
+        if out_of_bounds(canvas, snake_ids , score_count):
+            show_animated_game_over(canvas, score_count) 
+            break  # This line ensures the loop exits after showing the Game Over screen
+    
+
      
 # function for milestone # 3 
 def change_position(canvas, direction, snake_x, snake_y):
@@ -216,32 +252,46 @@ def out_of_bounds(canvas,snake_ids,food_id):
         return True
 
     return False
-    """
 
 # milestone 7 :
 def out_of_bounds(canvas, snake_head_id):
     # No need for food_id here. so I removed it 
+"""
+# milestone 8 :
+# adding score_count
+def out_of_bounds(canvas,snake_ids,score_count):
+    snake_head_id = snake_ids[-1]  #  get the last piece of the snake
     
+    # milestone 7 : 
     x = canvas.get_left_x(snake_head_id)
     y = canvas.get_top_y(snake_head_id)
 
-    # Check that x and y are not None:
+    # milestone 7 : Check that x and y are not None:
     if x is None or y is None:
         print("Warning: invalid snake head position.")
         return True  # treat as game over
-
+    # milestone 7 : 
     return x<0 or x >= CANVAS_WIDTH or y<0 or y >= CANVAS_HEIGHT 
 
 # Milestone #5: Moving the food and creating new food
-def food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id):
+#def food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id):
+
+# milestone 8 : adding score_count
+def food_eaten(canvas,snake_x, snake_y,food_x,food_y,food_id,score_count):
     if snake_x == food_x and snake_y == food_y:
         canvas.delete(food_id)
 
-        # Generate new food
+        score_count += 1 # milestone 8 : adding score_count
+
+        # Milestone #5: Generate new food
         food_x, food_y, food_id = new_food(canvas)
-        return food_x, food_y, food_id, True  # just_ate = True
+        #return food_x, food_y, food_id, True  # just_ate = True
+        return food_x, food_y, food_id, score_count, True  # just_ate = True # milestone 8 : adding score_count
+
     else:
-        return food_x, food_y, food_id, False  # just_ate = False
+        #return food_x, food_y, food_id, False  # just_ate = False
+        return food_x, food_y, food_id, score_count, False  # just_ate = False # milestone 8 : adding score_count
+
 
 # functions for Milestone #5      
 def new_food(canvas):
@@ -252,7 +302,10 @@ def new_food(canvas):
     return food_x, food_y, food_id   
 
 # functions for Milestone #7
-def show_animated_game_over(canvas):
+#def show_animated_game_over(canvas):
+
+# milestone 8 : adding score_count 
+def show_animated_game_over(canvas, score_count):
     size = 32
     grow = True
 
@@ -274,7 +327,16 @@ def show_animated_game_over(canvas):
             color="red"
         )
         
-        
+        # show final score
+        canvas.create_text(
+            CANVAS_WIDTH // 4,
+            CANVAS_HEIGHT // 3,
+            text="Your score is " + str(score_count)+ " !",
+            font="Arial",
+            font_size=size//2,
+            color="blue"
+        )
+         
         # Draw button again (since we cleared everything)
         canvas.create_rectangle(x1, y1, x2, y2, color="lightgray")
         canvas.create_text(
