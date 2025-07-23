@@ -140,7 +140,7 @@ def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id,
     just_ate = False
 
     while True:  # animation loop
-        time.sleep(DELAY)
+        time.sleep(delay)
 
         #  Move the snake in the current direction - move 20 pixels in the current direction
 
