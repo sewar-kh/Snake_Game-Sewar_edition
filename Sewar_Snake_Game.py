@@ -164,6 +164,12 @@ def animate(canvas, snake, snake_x, snake_y, snake_ids, food_x, food_y, food_id,
         `moveto` function expects a single object ID (likely a string), but it is receiving a list when changing snake_id to 'snake_ids' on milestone 5, 
         which is a list of object IDs. One way to fix this : we can ensure that each ID in the `snake_ids` list is moved individually using the `moveto` function. I chose to use another method 
         """
+        # milestone 10 - Adding Self-Collision Detection
+        # Check collision with self BEFORE adding the new head
+        if (snake_x, snake_y) in snake:
+            show_animated_game_over(canvas, score_count)
+            break
+
         # milestone 6 : Compute new head position
         new_head = (snake_x, snake_y)
         snake.append(new_head)
