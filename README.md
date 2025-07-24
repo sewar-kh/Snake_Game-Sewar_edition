@@ -45,4 +45,7 @@ Milestone	Description
 Inspiration
 This game was developed for my final project as part of the Code in Place 2025 course, inspired by the classic Nokia Snake game.
 
+🔗 Code in Place 2025 Final Project Showcase
+👉 Sewar's Snake Game – Showcase Page
+
 Created with ❤️ by Sewar Kharman
